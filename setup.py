@@ -198,6 +198,7 @@ def whencalled():
 
 	
 def prereq():
+	os.system("sudo apt-get install build-essential libssl-dev libffi-dev python-dev")
 	os.system("apt install python-pip -y")
 	os.system("apt install python3-pip -y")
 	os.system("pip install paramiko ")
