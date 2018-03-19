@@ -8,12 +8,12 @@ from configparser import SafeConfigParser
 import glob
 
 def findconfig():
-	parser = SafeConfigParser()
-	candidates = ['nightfallconfig.ini','hosts']
-	found = parser.read(candidates)
-	missing = set(candidates) - set(found)
-	print('Found config files : ', sorted(found))
-	print('Missing files 	  : ', sorted(missing))
+#	parser = SafeConfigParser()
+#	candidates = ['nightfallconfig.ini','hosts']
+#	found = parser.read(candidates)
+#	missing = set(candidates) - set(found)
+#	print('Found config files : ', sorted(found))
+#	print('Missing files 	  : ', sorted(missing))
 	# Configure all the hosts configurations
 	#global controllerIp = (parser.get('controller_config','controllerIp0'))
 	#global conmanagementIp = (parser.get('controller_config','managementIp0'))
@@ -36,12 +36,12 @@ def findconfig():
 	#global comnetmask = (parser.get('compute_config','netmask'))
 	#iwillbereplaced=getconfig
 
-	if int(len(missing)) == 2:
-		print("Run python3 setup.py ")
-		sys.exit()		
-	if int(len(missing)) == 1:
-		print("Run python3 setup.py ")
-		sys.exit()
+#	if int(len(missing)) == 2:
+#		print("Run python3 setup.py ")
+#		sys.exit()		
+#	if int(len(missing)) == 1:
+#		print("Run python3 setup.py ")
+#		sys.exit()
 	
 
 def status():
@@ -171,53 +171,53 @@ def interfaceConfig():
 	
 
 #installation of basic Services for deploying openstack private cloud
-def prereq():
-	print(" Runnig basic configuration ")
-	os.system("apt update -y -qq")
-	os.system("apt upgrade -y -qq")
-	os.system("apt install chrony -y -qq")
-	os.system("apt install openssh-server -y ")
-	os.system("apt install python-mysqldb -y")
+#def prereq():
+#	print(" Runnig basic configuration ")
+#	os.system("apt update -y -qq")
+#	os.system("apt upgrade -y -qq")
+#	os.system("apt install chrony -y -qq")
+#	os.system("apt install openssh-server -y ")
+#	os.system("apt install python-mysqldb -y")
 #	os.system("sudo apt-get install python3-pip -y")
 #	os.system("sudo pip3 install PyMySQL")
-	os.system("apt install software-properties-common -y ")
-	os.system("add-apt-repository cloud-archive:ocata -y")
+#	os.system("apt install software-properties-common -y ")
+#	os.system("add-apt-repository cloud-archive:ocata -y")
 #	os.system("apt install python-openstackclient -y")
-	os.system("apt update -y && apt dist-upgrade -y")
+#	os.system("apt update -y && apt dist-upgrade -y")
 #	os.system("apt install python-pymysql -y")
-	os.system("apt install python-openstackclient -y")
-	os.system("apt-get install -y openvswitch-switch")
-	os.system("ovs-vsctl add-br br-ex")
-	os.system("apt install vim -y")
+#	os.system("apt install python-openstackclient -y")
+#	os.system("apt-get install -y openvswitch-switch")
+#	os.system("ovs-vsctl add-br br-ex")
+#	os.system("apt install vim -y")
 	#print(" Enter the details ") 
 	#contimes()
 	#comtimes()
-	os.system("cp /etc/hosts /etc/hosts.old")
-	os.system("cp hosts /etc/hosts")
-	os.system("cat /etc/hosts")
-	os.system("sudo sed -i -re 's/ubuntu/controller/g' /etc/hostname ")
-	print("\n")
-	status()
-	os.system("cat /etc/hostname")
-	print("\n")
-	os.system("ip a")	
-	os.system("cp /etc/network/interfaces /etc/network/interface.old")
-	os.system("rm /etc/network/interfaces")
-	status()
-	interfaceConfig()
-	os.system("cat /etc/network/interfaces")
-	os.system(bridgeCreation)
-	os.system("sudo sed -i -re 's/#net.ipv4.conf.default.rp_filter=1/net.ipv4.conf.default.rp_filter=0/g' /etc/sysctl.conf ")	
-	os.system("sudo sed -i -re 's/#net.ipv4.conf.all.rp_filter=1/net.ipv4.conf.all.rp_filter=0/g' /etc/sysctl.conf ")
-	os.system("sudo sed -i -re 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf ")
-	status()
-	os.system("sysctl -p ")
-	status()
-#	useless = input("Machine will restart now and Run the script for Installation and configuration of Mysql and RabbitMQ ( Enter to confirm ) ")
+#	os.system("cp /etc/hosts /etc/hosts.old")
+#	os.system("cat hosts >> /etc/hosts")
+#	os.system("cat /etc/hosts")
+#	os.system("sudo sed -i -re 's/ubuntu/controller/g' /etc/hostname ")
+#	print("\n")
+#	status()
+#	os.system("cat /etc/hostname")
+#	print("\n")
+#	os.system("ip a")	
+#	os.system("cp /etc/network/interfaces /etc/network/interface.old")
+#	os.system("rm /etc/network/interfaces")
+#	status()
+#	interfaceConfig()
+#	os.system("cat /etc/network/interfaces")
+#	os.system(bridgeCreation)
+#	os.system("sudo sed -i -re 's/#net.ipv4.conf.default.rp_filter=1/net.ipv4.conf.default.rp_filter=0/g' /etc/sysctl.conf ")	
+#	os.system("sudo sed -i -re 's/#net.ipv4.conf.all.rp_filter=1/net.ipv4.conf.all.rp_filter=0/g' /etc/sysctl.conf ")
+#	os.system("sudo sed -i -re 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf ")
+#	status()
+#	os.system("sysctl -p ")
+#	status()
+##	useless = input("Machine will restart now and Run the script for Installation and configuration of Mysql and RabbitMQ ( Enter to confirm ) ")
 	#os.system("init 6")
-	os.system("ip addr flush ens33 && systemctl restart networking.service")
-	os.system("ip addr flush ens34 && systemctl restart networking.service")
-	menu()
+#	os.system("ip addr flush ens33 && systemctl restart networking.service")
+#	os.system("ip addr flush ens34 && systemctl restart networking.service")
+#	mymyq()
 
 #Installation of Mysql and RabbitMQ Server
 def mymq():
@@ -249,12 +249,12 @@ def mymq():
 	os.system("service memcached restart")
 	keystone()
 	
-#def need():
+def need():
 	
-        global controllerIp1
-        global managementIp1
-        controllerIp1 = controllerIp
-        managementIp1 = conmanagementIp
+	global controllerIp1
+	global managementIp1
+	controllerIp1 = controllerIp
+	managementIp1 = conmanagementIp
 		
 def creds():
 #       global permission
@@ -338,7 +338,13 @@ def keystone():
 #	global controllerIp1
 #	global managementIp1
 	print(" Running Installation of Keystone ")
+	os.system("apt install python-pip -y")
+	os.system("apt install python3-pip -y")
+	os.system("pip install PyMySQL")
+	os.system("pip3 install PyMySQL")
+	os.system("pip install --upgrade pip")
 	os.system("apt install keystone -y")
+	os.system("sudo apt-get install python3-mysqldb -y")
 	need()
 #	controllerIp1 = input("Enter the controller Ip ( example : 192.168.0.35 ) : ")
 #	managementIp1 = input("Enter the Management Ip ( example : 100.100.100.35 ) : ")
@@ -378,7 +384,8 @@ def glanceproc():
 	os.system("service glance-api restart")
 	os.system("wget http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img")
 	os.system("openstack image create \"cirros\"  --file cirros-0.3.4-x86_64-disk.img --disk-format qcow2 --container-format bare --public")
-	os.system("openstack image list")	
+	os.system("openstack image list")
+	neutron()	
 
 def glance():
 	print("Running Installation of Glance \n")	
@@ -394,7 +401,7 @@ def neutronproc():
 	os.system("openstack endpoint create --region RegionOne network public http://"+controllerIp1+":9696")
 	os.system("openstack endpoint create --region RegionOne network internal http://"+managementIp1+":9696")
 	os.system("openstack endpoint create --region RegionOne network admin http://"+managementIp1+":9696")
-	os.system("apt-get install neutron-server neutron-dhcp-agent neutron-plugin-openvswitch-agent neutron-l3-agent dnsmasq python-neutronclient")
+	os.system("apt-get install neutron-server neutron-dhcp-agent neutron-plugin-openvswitch-agent neutron-l3-agent dnsmasq python-neutronclient -y")
 	dbfunc()
 	cur.execute("CREATE DATABASE neutron;")
 	cur.execute("GRANT ALL ON neutron.* TO 'neutronUser'@'%' IDENTIFIED BY 'neutronPass';")	
@@ -460,8 +467,8 @@ def novaproc():
 	placementPublic = "openstack endpoint create --region RegionOne placement public http://"+controllerIp1+":8778"
 	placementInternal = "openstack endpoint create --region RegionOne placement internal http://"+managementIp1+":8778"
 	placementAdmin = "openstack endpoint create --region RegionOne placement admin http://"+managementIp1+":8778"
-	os.system("apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient nova-console")
-	os.system("apt install nova-placement-api")
+	os.system("apt-get install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient nova-console -y")
+	os.system("apt install nova-placement-api -y")
 	dbfunc()
 	cur.execute("CREATE DATABASE nova;")
 	cur.execute("GRANT ALL ON nova.* TO 'novaUser'@'%' IDENTIFIED BY 'novaPass';")
@@ -492,7 +499,7 @@ def novaproc():
 	horizon()
 
 def horizonproc():
-	os.system("apt-get install openstack-dashboard ")
+	os.system("apt-get install openstack-dashboard -y")
 	with open('/etc/openstack-dashboard/local_settings.py', 'r') as myfile:
 		data=myfile.read().replace('OPENSTACK_HOST = "127.0.0.1"', 'OPENSTACK_HOST = "'+str(controllerIp1)+'"')
 		data=data.replace('OPENSTACK_KEYSTONE_URL = "http://%s:5000/v2.0" % OPENSTACK_HOST', 'OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST')
@@ -511,7 +518,7 @@ def horizonproc():
 
 def horizon():
 	print("\nRunning Installation of Horizon\n")
-	needs()
+	need()
 	creds()
 	horizonproc()	
 
@@ -527,32 +534,41 @@ def neutron():
 	creds()
 	neutronproc()
 
-menu1 = input("\nSelect from the menu above ")
-if menu1 =="":
-	prereq()
 
-elif menu1 =="1":
-	print("\nBasic Configuration selected ")
-	prereq()
 
-elif menu1 =="2":
-	print("\nInstallation of Mysql and RabbitMQ selected ")
-	mymq()
+#prereq()
+mymq()
+keystone()
+glance()
+neutron()
+nova()
+horizon()
+#menu1 = input("\nSelect from the menu above ")
+#if menu1 =="":
+#	prereq()
+#
+#elif menu1 =="1":
+#	print("\nBasic Configuration selected ")
+#	prereq()
 
-if menu1 =="3":
-	print("\nInstallation of Keystone selected ")
-	keystone()
-
-if menu1 =="4":
-	print("\nInstallation of Glance selected ")
-	glance()
-
-if menu1 =="5":
-	print("\nInstallation of Neutron selected ")
-	neutron()
-if menu1 =="6":
-	print("\nInstallation of Nova Selected ")
-	nova()
-if menu1 =="7":
-	print("\nInstallation of Horizon Selected ")
-	horizon()
+#elif menu1 =="2":
+#	print("\nInstallation of Mysql and RabbitMQ selected ")
+#	mymq()
+#
+#if menu1 =="3":
+#	print("\nInstallation of Keystone selected ")
+#	keystone()
+#
+#if menu1 =="4":
+#	print("\nInstallation of Glance selected ")
+#	glance()
+#
+#if menu1 =="5":
+#	print("\nInstallation of Neutron selected ")
+#	neutron()
+#if menu1 =="6":
+#	print("\nInstallation of Nova Selected ")
+#	nova()
+#if menu1 =="7":
+#	print("\nInstallation of Horizon Selected ")
+#	horizon()

@@ -24,10 +24,8 @@ def findconfig():
 	global comcontrollerip
 	#iwillbereplaced=getconfig
 	
-#	if int(len(missing)) == 2:
-#		print("Run python3 setup.py ")	
 #	if int(len(missing)) == 1:
-#		print("Run python3 setup.py ")
+#		print("Run python3 setup.py first " )
 #		sys.exit()		
 			
 
@@ -74,14 +72,14 @@ print(" Minimum Requirements : 4 GB Ram , 2 Bridge Network interfaces , virtuali
 findconfig()
 
 
-
+#menu()
 
 #Interface Configuration 
 def interfaceConfig():
 	global networkInterface1
 	global networkInterface2
 	global managementIp
-	global bridgeCreation
+#	global bridgeCreation
 	os.system("ip a | cat > tempconfig")
 	with open('tempconfig', 'r') as myfile:
    		 data=myfile.read()
@@ -132,6 +130,7 @@ def prereq():
 	os.system("cat /etc/hosts")
 	os.system("cp /etc/hostname /etc/hostname.old")
 	os.system("rm /etc/hostname")
+	findconfig()
 	hostnametext = computeName
 	hostfile = open('/etc/hostname','w')
 	hostfile.write(hostnametext)
@@ -146,7 +145,7 @@ def prereq():
 	status()
 	interfaceConfig()
 	os.system("cat /etc/network/interfaces")
-	os.system(bridgeCreation)
+	#os.system(bridgeCreation)
 	os.system("sudo sed -i -re 's/#net.ipv4.conf.default.rp_filter=1/net.ipv4.conf.default.rp_filter=0/g' /etc/sysctl.conf ")	
 	os.system("sudo sed -i -re 's/#net.ipv4.conf.all.rp_filter=1/net.ipv4.conf.all.rp_filter=0/g' /etc/sysctl.conf ")
 	os.system("sudo sed -i -re 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf ")
@@ -155,46 +154,11 @@ def prereq():
 	status()
 #	useless = input("Machine will restart now and Run the script for Installation and configuration of Mysql and RabbitMQ ( Enter to confirm ) ")
 	#os.system("init 6")
-	restarttext = "ip addr flush "+networkInterface1+" && systemctl restart networking.service"
-	restarttext2 = "ip addr flush "+networkInterface2+" && systemctl restart networking.service"
-	os.system(restarttext)
-	os.system(restarttext2)
+	os.system("init 6")
+#	restarttext = "ip addr flush "+networkInterface1+" && systemctl restart networking.service"
+#	restarttext2 = "ip addr flush "+networkInterface2+" && systemctl restart networking.service"
+#	os.system(restarttext)
+#	os.system(restarttext2)
 #	os.system("ip addr flush ens34 && systemctl restart networking.service")
-	
-
-def neutronproc():
-	os.system("apt-get install neutron-plugin-openvswitch-agent python-mysqldb python-neutronclient -y")
-	os.system("rm /etc/neutron/plugins/ml2/openvswitch_agent.ini")
-	os.system("rm /etc/neutron/neutron.conf")
-	openvswitchAgentConfig = "[DEFAULT]\nverbose = true\n[agent]\ntunnel_types = vxlan\nl2population = True\n[ovs]\nlocal_ip = "+commanagementIp+"\nenable_tunneling = True\nvxlan_udp_port = 4789\ntunnel_types = vxlan\ntunnel_id_ranges = 1:2000\ntunnel_network_types = vxlan\n[securitygroup]\nfirewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver\nenable_security_group = True\n[xenapi]\n"
-	saveFile = open('/etc/neutron/plugins/ml2/openvswitch_agent.ini','w')
-	saveFile.write(openvswitchAgentConfig)
-	saveFile.close()
-	neutronConfig = "[DEFAULT]\n\ncore_plugin = ml2\nservice_plugins = router\nallow_overlapping_ips = true\nverbose = true\nauth_strategy = keystone\ntransport_url = rabbit://openstack:rabbit@"+comcontrollerip+"\n\nnotify_nova_on_port_status_changes = True\nnotify_nova_on_port_data_changes = True\n\n[agent]\n\nroot_helper = sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf\n\n[cors]\n\n[cors.subdomain]\n\n[database]\n\nconnection = mysql+pymysql://neutronUser:neutronPass@"+comcontrollerip+"/neutron\n\n[keystone_authtoken]\n\nauth_uri = http://"+comcontrollerip+":5000\nauth_url = http://"+comcontrollerip+":35357\nmemcached_servers = "+comcontrollerip+":11211\nauth_type = password\nproject_domain_name = default\nuser_domain_name = default\nproject_name = service\nusername = neutron\npassword = service_pass\n\n[matchmaker_redis]\n\n[nova]\n\nauth_url = http://"+comcontrollerip+":35357\nauth_type = password\nproject_domain_name = default\nuser_domain_name = default\nregion_name = RegionOne\nproject_name = service\nusername = nova\npassword = service_pass\n\n[oslo_concurrency]\n\nlock_path = /var/lib/neutron/tmp\n\n[oslo_messaging_amqp]\n\n[oslo_messaging_kafka]\n\n[oslo_messaging_notifications]\n\n[oslo_messaging_rabbit]\n\n[oslo_messaging_zmq]\n\n[oslo_middleware]\n\n[oslo_policy]\n\n[qos]\n\n[quotas]\n\n[ssl]\n"
-	saveFile = open('/etc/neutron/neutron.conf','w')
-	saveFile.write(neutronConfig)
-	saveFile.close()
-	os.system("service neutron-openvswitch-agent restart;")
-	
-
-def novaproc():
-	os.system("apt-get install nova-compute sysfsutils -y")
-	os.system("rm /etc/nova/nova-compute.conf")
-	os.system("rm /etc/nova/nova.conf")
-	novaConfig = "[DEFAULT]\n\nenabled_apis=osapi_compute,metadata \nmy_ip = "+commanagementIp+"\nuse_neutron = True\nfirewall_driver = nova.virt.firewall.NoopFirewallDriver\ntransport_url = rabbit://openstack:rabbit@"+comcontrollerip+"\n\ndhcpbridge_flagfile=/etc/nova/nova.conf\n\ndhcpbridge=/usr/bin/nova-dhcpbridge\n\nforce_dhcp_release=true\n\nstate_path=/var/lib/nova\n\nlog_dir=/var/log/nova\n\n[api]\n\nauth_strategy=keystone\n\n[api_database]\n\nconnection=mysql+pymysql://novaUser:novaPass@"+comcontrollerip+"/nova_api\n\n[barbican]\n\n[cache]\n\n[cells]\n\nenable=False\n\n[cinder]\n\nos_region_name = RegionOne\n\n[cloudpipe]\n\n[conductor]\n\n[console]\n\n[consoleauth]\n\n[cors]\n\n[cors.subdomain]\n\n[crypto]\n\n[database]\n\nconnection=mysql+pymysql://novaUser:novaPass@"+comcontrollerip+"/nova\n\n[ephemeral_storage_encryption]\n\n[filter_scheduler]\n\ndiscover_hosts_in_cells_interval = 300\n\n[glance]\n\napi_servers = http://"+comcontrollerip+":9292\n\n[guestfs]\n\n[healthcheck]\n\n[hyperv]\n\n[image_file_url]\n\n[ironic]\n\n[key_manager]\n\n[keystone_authtoken]\n\nauth_uri = http://"+comcontrollerip+":5000\nauth_url = http://"+comcontrollerip+":35357\nmemcached_servers = "+comcontrollerip+":11211\nauth_type = password\nproject_domain_name = default\nuser_domain_name = default\nproject_name = service\nusername = nova\npassword = service_pass\n\n[libvirt]\n\n[matchmaker_redis]\n\n[metrics]\n\n[mks]\n\n[neutron]\n\nservice_metadata_proxy = True\nmetadata_proxy_shared_secret = mystack\nurl = http://"+comcontrollerip+":9696\nauth_url = http://"+comcontrollerip+":35357\nauth_type = password\nproject_domain_name = default\nuser_domain_name = default\nregion_name = RegionOne\nproject_name = service\nusername = neutron\npassword = service_pass\n\n[notifications]\n\n[osapi_v21]\n\n[oslo_concurrency]\n\nlock_path = /var/lib/nova/tmp\n\n[oslo_messaging_amqp]\n\n[oslo_messaging_kafka]\n\n[oslo_messaging_notifications]\n\n[oslo_messaging_rabbit]\n\n[oslo_messaging_zmq]\n\n[oslo_middleware]\n\n[oslo_policy]\n\n[pci]\n\n[placement]\nos_region_name = RegionOne\nproject_domain_name = Default\nproject_name = service\nauth_type = password\nuser_domain_name = Default\nauth_url = http://"+comcontrollerip+":35357/v3\nusername = placement\npassword = service_pass\n\n[quota]\n\n[rdp]\n\n[remote_debug]\n\n[scheduler]\ndiscover_hosts_in_cells_interval = 300\n[serial_console]\n\n[service_user]\n\n[spice]\n\n[ssl]\n\n[trusted_computing]\n\n[upgrade_levels]\n\n[vendordata_dynamic_auth]\n\n[vmware]\n\n[vnc]\n\nvnc_enabled = True\nvncserver_listen = 0.0.0.0\nvncserver_proxyclient_address = "+commanagementIp+"		\nnovncproxy_base_url = http://"+comconip+":6080/vnc_auto.html\n\n[workarounds]\n\n[wsgi]\n\napi_paste_config=/etc/nova/api-paste.ini\n\n[xenserver]\n\n[xvp]\n"
-	saveFile = open('/etc/nova/nova.conf','w')
-	saveFile.write(novaConfig)
-	saveFile.close()
-	novacomConfig = "[DEFAULT]\n compute_driver=libvirt.LibvirtDriver\n [libvirt]\n virt_type=qemu\n"
-	savefile = open('/etc/nova/nova-compute.conf','w')
-	savefile.write(novacomConfig)
-	savefile.close()
-	os.system("service nova-compute restart")
-	status()
-
-def main():
-#	prereq()
-	neutronproc()
-	novaproc()
-
-main()
+	#menu()
+prereq()
