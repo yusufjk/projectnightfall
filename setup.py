@@ -200,9 +200,9 @@ def whencalled():
 def prereq():
 	os.system("apt install python-pip -y")
 	os.system("apt install python3-pip -y")
-#	os.system("pip3 install paramiko ")
+	os.system("pip install paramiko ")
 	os.system("pip install --upgrade pip")
-#	os.system("pip3 install paramiko")
+	os.system("pip3 install paramiko")
 	os.system("apt install apache2 -y")
 
 #def ssh():
